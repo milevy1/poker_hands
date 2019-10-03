@@ -60,4 +60,16 @@ defmodule PokerHands do
   def flush?(["S", "S", "S", "S", "S"]), do: true
   def flush?(["H", "H", "H", "H", "H"]), do: true
   def flush?(_suites), do: false
+
+  def straight?(["2", "3", "4", "5", "A"]), do: true
+  def straight?(["2", "3", "4", "5", "6"]), do: true
+  def straight?(["3", "4", "5", "6", "7"]), do: true
+  def straight?(["4", "5", "6", "7", "8"]), do: true
+  def straight?(["5", "6", "7", "8", "9"]), do: true
+  def straight?(["6", "7", "8", "9", "T"]), do: true
+  def straight?(["7", "8", "9", "J", "T"]), do: true
+  def straight?(["8", "9", "J", "Q", "T"]), do: true
+  def straight?(["9", "J", "K", "Q", "T"]), do: true
+  def straight?(["A", "J", "K", "Q", "T"]), do: true
+  def straight?(_values), do: false
 end

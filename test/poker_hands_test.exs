@@ -71,4 +71,22 @@ defmodule PokerHandsTest do
       assert PokerHands.flush?(["D", "H", "C", "H", "S"]) == false
     end
   end
+
+  describe ".straight?/1" do
+    test "It returns true if a hand is a Straight" do
+      assert PokerHands.straight?(["2", "3", "4", "5", "A"]) == true
+      assert PokerHands.straight?(["2", "3", "4", "5", "6"]) == true
+      assert PokerHands.straight?(["3", "4", "5", "6", "7"]) == true
+      assert PokerHands.straight?(["4", "5", "6", "7", "8"]) == true
+      assert PokerHands.straight?(["5", "6", "7", "8", "9"]) == true
+      assert PokerHands.straight?(["6", "7", "8", "9", "T"]) == true
+      assert PokerHands.straight?(["7", "8", "9", "J", "T"]) == true
+      assert PokerHands.straight?(["8", "9", "J", "Q", "T"]) == true
+      assert PokerHands.straight?(["9", "J", "K", "Q", "T"]) == true
+      assert PokerHands.straight?(["A", "J", "K", "Q", "T"]) == true
+
+      assert PokerHands.straight?(["3", "4", "5", "A", "K"]) == false
+      assert PokerHands.straight?(["3", "4", "5", "9", "T"]) == false
+    end
+  end
 end
