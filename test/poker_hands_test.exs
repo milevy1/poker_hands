@@ -25,12 +25,23 @@ defmodule PokerHandsTest do
       assert PokerHands.ranking(["TD", "JC", "QC", "KC", "AC"]) != 1
     end
 
+    test "It ranks a Straight Flush as a 2" do
+      assert PokerHands.ranking(["2C", "3C", "4C", "5C", "6C"]) == 2
+      assert PokerHands.ranking(["2C", "3C", "4C", "5C", "AC"]) == 2
+      assert PokerHands.ranking(["9C", "TC", "JC", "QC", "KC"]) == 2
+    end
+
     test "It ranks a Normal Flush as a 5" do
       assert PokerHands.ranking(["2D", "4D", "QD", "KD", "AD"]) == 5
       assert PokerHands.ranking(["2H", "4H", "QH", "KH", "AH"]) == 5
       assert PokerHands.ranking(["2S", "4S", "QS", "KS", "AS"]) == 5
       assert PokerHands.ranking(["2C", "4C", "QC", "KC", "AC"]) == 5
       assert PokerHands.ranking(["2C", "4D", "QD", "KD", "AD"]) != 5
+    end
+
+    test "It ranks a Normal Straight as a 6" do
+      assert PokerHands.ranking(["2D", "3D", "4C", "5D", "AD"]) == 6
+      assert PokerHands.ranking(["2D", "3D", "4C", "5D", "6D"]) == 6
     end
   end
 
@@ -69,6 +80,37 @@ defmodule PokerHandsTest do
       assert PokerHands.flush?(["S", "S", "S", "S", "S"]) == true
       assert PokerHands.flush?(["H", "H", "H", "H", "H"]) == true
       assert PokerHands.flush?(["D", "H", "C", "H", "S"]) == false
+    end
+  end
+
+  describe ".straight?/1" do
+    test "It returns true if a hand is a Straight" do
+      assert PokerHands.straight?(["2", "3", "4", "5", "A"]) == true
+      assert PokerHands.straight?(["2", "3", "4", "5", "6"]) == true
+      assert PokerHands.straight?(["3", "4", "5", "6", "7"]) == true
+      assert PokerHands.straight?(["4", "5", "6", "7", "8"]) == true
+      assert PokerHands.straight?(["5", "6", "7", "8", "9"]) == true
+      assert PokerHands.straight?(["6", "7", "8", "9", "T"]) == true
+      assert PokerHands.straight?(["7", "8", "9", "J", "T"]) == true
+      assert PokerHands.straight?(["8", "9", "J", "Q", "T"]) == true
+      assert PokerHands.straight?(["9", "J", "K", "Q", "T"]) == true
+      assert PokerHands.straight?(["A", "J", "K", "Q", "T"]) == true
+
+      assert PokerHands.straight?(["3", "4", "5", "A", "K"]) == false
+      assert PokerHands.straight?(["3", "4", "5", "9", "T"]) == false
+
+      # Cannot loop the deck
+      assert PokerHands.straight?(["2", "3", "A", "K", "Q"]) == false
+    end
+  end
+
+  describe ".straight_flush?/2" do
+    test "It returns true if a hand is a Straight Flush" do
+      assert PokerHands.straight_flush?(["2", "3", "4", "5", "A"], ["C", "C", "C", "C", "C"]) == true
+      assert PokerHands.straight_flush?(["9", "J", "K", "Q", "T"], ["H", "H", "H", "H", "H"]) == true
+
+      assert PokerHands.straight_flush?(["2", "3", "4", "5", "A"], ["C", "S", "C", "C", "C"]) == false
+      assert PokerHands.straight_flush?(["9", "J", "K", "Q", "T"], ["H", "H", "H", "C", "H"]) == false
     end
   end
 end

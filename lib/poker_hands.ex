@@ -26,11 +26,11 @@ defmodule PokerHands do
 
     cond do
       royal_flush?(values, suites) -> 1
-      # straight_flush?(values, suites) -> 2
+      straight_flush?(values, suites) -> 2
       # four_of_a_kind?(values) -> 3
       # full_house?(values) -> 4
       flush?(suites) -> 5
-      # straight?(values) -> 6
+      straight?(values) -> 6
       # three_of_a_kind?(values) -> 7
       # two_pairs -> 8
       # one_pair -> 9
@@ -60,4 +60,23 @@ defmodule PokerHands do
   def flush?(["S", "S", "S", "S", "S"]), do: true
   def flush?(["H", "H", "H", "H", "H"]), do: true
   def flush?(_suites), do: false
+
+  def straight?(["2", "3", "4", "5", "A"]), do: true
+  def straight?(["2", "3", "4", "5", "6"]), do: true
+  def straight?(["3", "4", "5", "6", "7"]), do: true
+  def straight?(["4", "5", "6", "7", "8"]), do: true
+  def straight?(["5", "6", "7", "8", "9"]), do: true
+  def straight?(["6", "7", "8", "9", "T"]), do: true
+  def straight?(["7", "8", "9", "J", "T"]), do: true
+  def straight?(["8", "9", "J", "Q", "T"]), do: true
+  def straight?(["9", "J", "K", "Q", "T"]), do: true
+  def straight?(["A", "J", "K", "Q", "T"]), do: true
+  def straight?(_values), do: false
+
+  def straight_flush?(values, suites) do
+    case {straight?(values), flush?(suites)} do
+      {true, true} -> true
+      _ -> false
+    end
+  end
 end
