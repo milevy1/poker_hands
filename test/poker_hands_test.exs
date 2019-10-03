@@ -87,6 +87,19 @@ defmodule PokerHandsTest do
 
       assert PokerHands.straight?(["3", "4", "5", "A", "K"]) == false
       assert PokerHands.straight?(["3", "4", "5", "9", "T"]) == false
+
+      # Cannot loop the deck
+      assert PokerHands.straight?(["2", "3", "A", "K", "Q"]) == false
+    end
+  end
+
+  describe ".straight_flush?/2" do
+    test "It returns true if a hand is a Straight Flush" do
+      assert PokerHands.straight_flush?(["2", "3", "4", "5", "A"], ["C", "C", "C", "C", "C"]) == true
+      assert PokerHands.straight_flush?(["9", "J", "K", "Q", "T"], ["H", "H", "H", "H", "H"]) == true
+
+      assert PokerHands.straight_flush?(["2", "3", "4", "5", "A"], ["C", "S", "C", "C", "C"]) == false
+      assert PokerHands.straight_flush?(["9", "J", "K", "Q", "T"], ["H", "H", "H", "C", "H"]) == false
     end
   end
 end

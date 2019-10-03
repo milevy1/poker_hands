@@ -72,4 +72,11 @@ defmodule PokerHands do
   def straight?(["9", "J", "K", "Q", "T"]), do: true
   def straight?(["A", "J", "K", "Q", "T"]), do: true
   def straight?(_values), do: false
+
+  def straight_flush?(values, suites) do
+    case {straight?(values), flush?(suites)} do
+      {true, true} -> true
+      _ -> false
+    end
+  end
 end
