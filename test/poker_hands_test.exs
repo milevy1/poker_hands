@@ -47,4 +47,18 @@ defmodule PokerHandsTest do
       assert PokerHands.suites(["2C", "3D", "4H", "5S", "6D"]) == ["C", "D", "H", "S", "D"]
     end
   end
+
+  describe ".royal_flush?/2" do
+    test "It returns true if the hand is a Royal Flush" do
+      assert PokerHands.royal_flush?(["A", "J", "K", "Q", "T"], ["D", "D", "D", "D", "D"]) == true
+      assert PokerHands.royal_flush?(["A", "J", "K", "Q", "T"], ["H", "H", "H", "H", "H"]) == true
+      assert PokerHands.royal_flush?(["A", "J", "K", "Q", "T"], ["S", "S", "S", "S", "S"]) == true
+      assert PokerHands.royal_flush?(["A", "J", "K", "Q", "T"], ["C", "C", "C", "C", "C"]) == true
+      assert PokerHands.royal_flush?(["2", "J", "K", "Q", "T"], ["C", "C", "C", "C", "C"]) == false
+
+      # Note the values must be sorted alphabetically
+      # which is taken care of by .values/1
+      assert PokerHands.royal_flush?(["T", "J", "Q", "K", "A"], ["C", "C", "C", "C", "C"]) == false
+    end
+  end
 end
