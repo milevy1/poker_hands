@@ -26,11 +26,11 @@ defmodule PokerHands do
 
     cond do
       royal_flush?(values, suites) -> 1
-      # straight_flush?(values, suites) -> 2
+      straight_flush?(values, suites) -> 2
       # four_of_a_kind?(values) -> 3
       # full_house?(values) -> 4
       flush?(suites) -> 5
-      # straight?(values) -> 6
+      straight?(values) -> 6
       # three_of_a_kind?(values) -> 7
       # two_pairs -> 8
       # one_pair -> 9

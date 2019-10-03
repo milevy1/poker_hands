@@ -25,12 +25,23 @@ defmodule PokerHandsTest do
       assert PokerHands.ranking(["TD", "JC", "QC", "KC", "AC"]) != 1
     end
 
+    test "It ranks a Straight Flush as a 2" do
+      assert PokerHands.ranking(["2C", "3C", "4C", "5C", "6C"]) == 2
+      assert PokerHands.ranking(["2C", "3C", "4C", "5C", "AC"]) == 2
+      assert PokerHands.ranking(["9C", "TC", "JC", "QC", "KC"]) == 2
+    end
+
     test "It ranks a Normal Flush as a 5" do
       assert PokerHands.ranking(["2D", "4D", "QD", "KD", "AD"]) == 5
       assert PokerHands.ranking(["2H", "4H", "QH", "KH", "AH"]) == 5
       assert PokerHands.ranking(["2S", "4S", "QS", "KS", "AS"]) == 5
       assert PokerHands.ranking(["2C", "4C", "QC", "KC", "AC"]) == 5
       assert PokerHands.ranking(["2C", "4D", "QD", "KD", "AD"]) != 5
+    end
+
+    test "It ranks a Normal Straight as a 6" do
+      assert PokerHands.ranking(["2D", "3D", "4C", "5D", "AD"]) == 6
+      assert PokerHands.ranking(["2D", "3D", "4C", "5D", "6D"]) == 6
     end
   end
 
