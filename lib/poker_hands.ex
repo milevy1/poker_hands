@@ -55,13 +55,9 @@ defmodule PokerHands do
   end
   def royal_flush?(_values, _suites), do: false
 
-  def flush?(suites) do
-    case suites do
-      ["C", "C", "C", "C", "C"] -> true
-      ["D", "D", "D", "D", "D"] -> true
-      ["S", "S", "S", "S", "S"] -> true
-      ["H", "H", "H", "H", "H"] -> true
-      _ -> false
-    end
-  end
+  def flush?(["C", "C", "C", "C", "C"]), do: true
+  def flush?(["D", "D", "D", "D", "D"]), do: true
+  def flush?(["S", "S", "S", "S", "S"]), do: true
+  def flush?(["H", "H", "H", "H", "H"]), do: true
+  def flush?(_suites), do: false
 end

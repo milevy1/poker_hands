@@ -61,4 +61,14 @@ defmodule PokerHandsTest do
       assert PokerHands.royal_flush?(["T", "J", "Q", "K", "A"], ["C", "C", "C", "C", "C"]) == false
     end
   end
+
+  describe ".flush?/1" do
+    test "It checks if a list of suites is a Flush" do
+      assert PokerHands.flush?(["C", "C", "C", "C", "C"]) == true
+      assert PokerHands.flush?(["D", "D", "D", "D", "D"]) == true
+      assert PokerHands.flush?(["S", "S", "S", "S", "S"]) == true
+      assert PokerHands.flush?(["H", "H", "H", "H", "H"]) == true
+      assert PokerHands.flush?(["D", "H", "C", "H", "S"]) == false
+    end
+  end
 end
