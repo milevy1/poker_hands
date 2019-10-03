@@ -1,7 +1,7 @@
 defmodule PokerHands do
   def winner?(cards_string) do
-    p1_cards = String.split(cards_string, " ") |> Enum.take(5)
-    p2_cards = String.split(cards_string, " ") |> Enum.take(-5)
+    p1_cards = cards(cards_string, :p1)
+    p2_cards = cards(cards_string, :p2)
 
     p1_ranking = ranking(p1_cards)
     p2_ranking = ranking(p2_cards)
@@ -10,6 +10,14 @@ defmodule PokerHands do
       p1_ranking < p2_ranking -> :p1
       p1_ranking > p2_ranking -> :p2
     end
+  end
+
+  def cards(cards_string, :p1) do
+    String.split(cards_string, " ") |> Enum.take(5)
+  end
+
+  def cards(cards_string, :p2) do
+    String.split(cards_string, " ") |> Enum.take(-5)
   end
 
   def ranking(cards) do

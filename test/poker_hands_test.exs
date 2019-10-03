@@ -6,4 +6,45 @@ defmodule PokerHandsTest do
     assert PokerHands.winner?("TC JC QC KC AC 7D 2S 5D 3S AC") == :p1
     assert PokerHands.winner?("7D 2S 5D 3S AC TC JC QC KC AC") == :p2
   end
+
+  describe ".cards/2" do
+    test "It splits a string of space separated cards into a list" do
+      cards = "TC JC QC KC AC 7D 2S 5D 3S AC"
+
+      assert PokerHands.cards(cards, :p1) == ["TC", "JC", "QC", "KC", "AC"]
+      assert PokerHands.cards(cards, :p2) == ["7D", "2S", "5D", "3S", "AC"]
+    end
+  end
+
+  describe ".ranking/1" do
+    test "It ranks a Royal Flush as a 1" do
+      assert PokerHands.ranking(["TC", "JC", "QC", "KC", "AC"]) == 1
+      assert PokerHands.ranking(["TH", "JH", "QH", "KH", "AH"]) == 1
+      assert PokerHands.ranking(["TS", "JS", "QS", "KS", "AS"]) == 1
+      assert PokerHands.ranking(["TD", "JD", "QD", "KD", "AD"]) == 1
+      assert PokerHands.ranking(["TD", "JC", "QC", "KC", "AC"]) != 1
+    end
+
+    test "It ranks a Normal Flush as a 5" do
+      assert PokerHands.ranking(["2D", "4D", "QD", "KD", "AD"]) == 5
+      assert PokerHands.ranking(["2H", "4H", "QH", "KH", "AH"]) == 5
+      assert PokerHands.ranking(["2S", "4S", "QS", "KS", "AS"]) == 5
+      assert PokerHands.ranking(["2C", "4C", "QC", "KC", "AC"]) == 5
+      assert PokerHands.ranking(["2C", "4D", "QD", "KD", "AD"]) != 5
+    end
+  end
+
+  describe ".values/1" do
+    test "It maps a list of cards into a list their values sorted" do
+      assert PokerHands.values(["2D", "3D", "4D", "5D", "6D"]) == ["2", "3", "4", "5", "6"]
+      assert PokerHands.values(["2D", "4D", "QD", "KD", "AD"]) == ["2", "4", "A", "K", "Q"]
+    end
+  end
+
+  describe ".suites/1" do
+    test "It maps a list of cards suites" do
+      assert PokerHands.suites(["2D", "3D", "4D", "5D", "6D"]) == ["D", "D", "D", "D", "D"]
+      assert PokerHands.suites(["2C", "3D", "4H", "5S", "6D"]) == ["C", "D", "H", "S", "D"]
+    end
+  end
 end
