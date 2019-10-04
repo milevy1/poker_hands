@@ -13,6 +13,7 @@ defmodule PokerHands do
     end
   end
 
+  def straight_high_card_winner?(p1_values, p2_values) when p1_values == p2_values, do: :tie
   def straight_high_card_winner?(["A", "J", "K", "Q", "T"], _p2_values), do: :p1
   def straight_high_card_winner?(_p1_values, ["A", "J", "K", "Q", "T"]), do: :p2
   def straight_high_card_winner?(["9", "J", "K", "Q", "T"], _p2_values), do: :p1
@@ -47,16 +48,16 @@ defmodule PokerHands do
     suites = suites(cards)
 
     cond do
-      royal_flush?(values, suites) -> 1
-      straight_flush?(values, suites) -> 2
-      # four_of_a_kind?(values) -> 3
-      # full_house?(values) -> 4
-      flush?(suites) -> 5
+      royal_flush?(values, suites) -> {1, values}
+      straight_flush?(values, suites) -> {2, values}
+      # four_of_a_kind?(values) -> {3, values}
+      # full_house?(values) -> {4, values}
+      flush?(suites) -> {5, values}
       straight?(values) -> {6, values}
-      # three_of_a_kind?(values) -> 7
-      # two_pairs -> 8
-      # one_pair -> 9
-      true -> 10 # high card
+      # three_of_a_kind?(values) -> {7, values}
+      # two_pairs -> {8, values}
+      # one_pair -> {9, values}
+      true -> {10, values} # high card
     end
   end
 
