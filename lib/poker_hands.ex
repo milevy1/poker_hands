@@ -29,6 +29,7 @@ defmodule PokerHands do
       p1_ranking == 7 -> three_of_a_kind_tie_breaker(p1_values, p2_values)
       p1_ranking == 8 -> two_pairs_tie_breaker(p1_values, p2_values)
       p1_ranking == 9 -> one_pair_tie_breaker(p1_values, p2_values)
+      p1_ranking == 10 -> high_card_assessment(p1_values, p2_values)
     end
   end
 
