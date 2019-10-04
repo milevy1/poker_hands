@@ -12,6 +12,11 @@ defmodule PokerHandsTest do
       assert PokerHands.winner?("TH JC QC KC AC 9D TS JD QS KC") == :p1
       assert PokerHands.winner?("9D TS JD QS KC TH JC QC KC AC") == :p2
     end
+
+    test "Competing Straight Flushes winner goes to the high card" do
+      assert PokerHands.winner?("3H 4H 5H 6H 7H 9D TD JD QD KD") == :p2
+      assert PokerHands.winner?("9D TD JD QD KD AH 2H 3H 4H 5H ") == :p1
+    end
   end
 
   describe ".straight_high_card_winner?/2" do

@@ -9,7 +9,7 @@ defmodule PokerHands do
     cond do
       p1_ranking < p2_ranking -> :p1
       p1_ranking > p2_ranking -> :p2
-      p1_ranking == 6 -> straight_high_card_winner?(p1_values, p2_values)
+      p1_ranking == 6 || p1_ranking == 2 -> straight_high_card_winner?(p1_values, p2_values)
     end
   end
 
