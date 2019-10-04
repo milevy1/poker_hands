@@ -140,6 +140,8 @@ defmodule PokerHands do
 
   # Because values are sorted by .values/1, set of fours
   # will be in beginning or end of list
+
+  # Both players high card at end of list
   def four_of_a_kind_tie_breaker([p1_value_1, p1_value_2, _p1_value_3, _p1_value_4, p1_high_card],
     [p2_value_1, p2_value_2, _p2_value_3, _p2_value_4, p2_high_card])
       when p1_value_1 == p1_value_2 and p2_value_1 == p2_value_2 do
@@ -147,6 +149,8 @@ defmodule PokerHands do
       four_of_a_kind_tie_breaker_assessment(p1_value_1, p1_high_card, p2_value_1, p2_high_card)
   end
 
+  # Player 1 high card at beginning
+  # Player 2 high card at end
   def four_of_a_kind_tie_breaker([p1_high_card, _p1_value_2, _p1_value_3, p1_value_4, p1_value_5],
     [p2_value_1, p2_value_2, _p2_value_3, _p2_value_4, p2_high_card])
       when p1_value_4 == p1_value_5 and p2_value_1 == p2_value_2 do
@@ -154,6 +158,8 @@ defmodule PokerHands do
       four_of_a_kind_tie_breaker_assessment(p1_value_5, p1_high_card, p2_value_1, p2_high_card)
   end
 
+  # Player 1 high card at end
+  # Player 2 high card at beginning
   def four_of_a_kind_tie_breaker([p1_value_1, p1_value_2, _p1_value_3, _p1_value_4, p1_high_card],
     [p2_high_card, _p2_value_2, _p2_value_3, p2_value_4, p2_value_5])
       when p1_value_1 == p1_value_2 and p2_value_4 == p2_value_5 do
@@ -161,6 +167,7 @@ defmodule PokerHands do
       four_of_a_kind_tie_breaker_assessment(p1_value_1, p1_high_card, p2_value_5, p2_high_card)
   end
 
+  # Both players high card at beginning of list
   def four_of_a_kind_tie_breaker([p1_high_card, _p1_value_2, _p1_value_3, p1_value_4, p1_value_5],
     [p2_high_card, _p2_value_2, _p2_value_3, p2_value_4, p2_value_5])
       when p1_value_4 == p1_value_5 and p2_value_4 == p2_value_5 do
