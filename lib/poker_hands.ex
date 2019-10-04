@@ -13,6 +13,11 @@ defmodule PokerHands do
                "K" => 13,
                "A" => 14}
 
+  def count_player_1_wins(filename) do
+    File.stream!(filename)
+    |> Enum.count(fn line -> String.trim(line) |> winner?() == :p1 end)
+  end
+
   def winner?(cards_string) do
     p1_cards = cards(cards_string, :p1)
     p2_cards = cards(cards_string, :p2)

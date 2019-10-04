@@ -1,7 +1,13 @@
 defmodule PokerHandsTest do
   use ExUnit.Case
 
-  # @tag :skip
+  describe "Loading and testing the runner file" do
+    test ".count_player_1_wins/1" do
+      # Googled this for checking my work
+      assert PokerHands.count_player_1_wins("poker.txt") == 376
+    end
+  end
+
   describe ".winner?/1" do
     test "Royal flush beats all other hands" do
       assert PokerHands.winner?("TC JC QC KC AC 7D 2S 5D 3S AC") == :p1
