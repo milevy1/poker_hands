@@ -52,6 +52,23 @@ defmodule PokerHandsTest do
     test "Full House ties if identical set of 3 and pair" do
       assert PokerHands.winner?("AH AD AS 2H 2D AH AD AS 2H 2D") == :tie
     end
+
+    test "Three of a kind ranks 7 for hands with just a set of three" do
+      assert PokerHands.winner?("AH AD AS 2H 5D AH JD 4S 2H 2D") == :p1
+    end
+
+    test "Three of a kind ties go to more valuable set of 3" do
+      assert PokerHands.winner?("AH AD AS 2H 5D KH KD KS 5H 2D") == :p1
+    end
+
+    test "Three of a kind ties with same set of 3 go to high card between remaining two cards" do
+      assert PokerHands.winner?("AH AD AS KH QD AH AD AS 3H 2D") == :p1
+      assert PokerHands.winner?("AH AD AS KH QD AH AD AS KD 2D") == :p1
+    end
+
+    test "Three of a kind ties if identical set of three and high card values" do
+      assert PokerHands.winner?("AH AD AS KH QD AH AD AS KH QD") == :tie
+    end
   end
 
   describe ".straight_tie_breaker/2" do
