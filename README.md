@@ -1,21 +1,22 @@
 # PokerHands
 
-**TODO: Add description**
+Solution to Project Euler Problem #54 - Poker Hands
+- Task was to build an application to determine the winner between two poker hands
+- Given a text file `poker.txt` with 1000 hands, how many hands does Player 1 win
+https://projecteuler.net/problem=54
 
-## Installation
+Built with [Elixir](https://elixir-lang.org/)
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `poker_hands` to your list of dependencies in `mix.exs`:
+## Format
 
-```elixir
-def deps do
-  [
-    {:poker_hands, "~> 0.1.0"}
-  ]
-end
-```
+Input
+- string
+- Example: `8C TS KC 9H 4S 7D 2S 5D 3S AC`
+- First 5 cards are Player 1 cards
+- Last 5 cards are Player 2 cards
+- First character is the value of the card (2 - Two, T - Ten, K - King)
+- Second character denotes the suite (S - Spades, H - Hearts, C - Clubs, D - Diamonds)
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/poker_hands](https://hexdocs.pm/poker_hands).
+## Poker Hand Rankings Tiebreakers
 
+https://www.adda52.com/poker/poker-rules/cash-game-rules/tie-breaker-rules
