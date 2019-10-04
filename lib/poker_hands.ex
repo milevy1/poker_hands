@@ -52,7 +52,7 @@ defmodule PokerHands do
       straight?(values) -> {6, values}
       three_of_a_kind?(values) -> {7, values}
       two_pairs?(values) -> {8, values}
-      # one_pair -> {9, values}
+      one_pair?(values) -> {9, values}
       true -> {10, values} # high card
     end
   end
@@ -350,6 +350,27 @@ defmodule PokerHands do
       {[value_1, value_4], kicker}
   end
 
+  def one_pair?([value_1, value_2, _value_3, _value_4, _value_5])
+    when value_1 == value_2 do
+      true
+  end
+
+  def one_pair?([_value_1, value_2, value_3, _value_4, _value_5])
+    when value_2 == value_3 do
+      true
+  end
+
+  def one_pair?([_value_1, _value_2, value_3, value_4, _value_5])
+    when value_3 == value_4 do
+      true
+  end
+
+  def one_pair?([_value_1, _value_2, _value_3, value_4, value_5])
+    when value_4 == value_5 do
+      true
+  end
+
+  def one_pair?(_values), do: false
 
   def high_card_assessment(p1_values, p2_values) do
     p1_converted_values = Enum.map(p1_values, fn x -> @value_map[x] end) |> Enum.sort |> Enum.reverse
