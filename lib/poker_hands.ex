@@ -27,6 +27,7 @@ defmodule PokerHands do
       p1_ranking == 2 || p1_ranking == 6 -> straight_tie_breaker(p1_values, p2_values)
       p1_ranking == 4 -> full_house_tie_breaker(p1_values, p2_values)
       p1_ranking == 7 -> three_of_a_kind_tie_breaker(p1_values, p2_values)
+      p1_ranking == 8 -> two_pairs_tie_breaker(p1_values, p2_values)
     end
   end
 
@@ -50,7 +51,7 @@ defmodule PokerHands do
       flush?(suites) -> {5, values}
       straight?(values) -> {6, values}
       three_of_a_kind?(values) -> {7, values}
-      # two_pairs -> {8, values}
+      two_pairs?(values) -> {8, values}
       # one_pair -> {9, values}
       true -> {10, values} # high card
     end
@@ -293,6 +294,62 @@ defmodule PokerHands do
         true -> high_card_assessment(p1_other_values, p2_other_values)
       end
   end
+
+  def two_pairs?([value_1, value_2, value_3, value_4, _value_5])
+    when value_1 == value_2 and value_3 == value_4 do
+      true
+  end
+
+  def two_pairs?([_value_1, value_2, value_3, value_4, value_5])
+    when value_2 == value_3 and value_4 == value_5 do
+      true
+  end
+
+  def two_pairs?([value_1, value_2, _value_3, value_4, value_5])
+    when value_1 == value_2 and value_4 == value_5 do
+      true
+  end
+
+  def two_pairs?(_values), do: false
+
+  def two_pairs_tie_breaker(p1_values, p2_values) do
+    {p1_pairs, p1_kicker} = find_two_pairs(p1_values)
+    {p2_pairs, p2_kicker} = find_two_pairs(p2_values)
+
+    p1_high_pair = Enum.max_by(p1_pairs, fn value -> @value_map[value] end)
+    p2_high_pair = Enum.max_by(p2_pairs, fn value -> @value_map[value] end)
+    p1_low_pair = Enum.min_by(p1_pairs, fn value -> @value_map[value] end)
+    p2_low_pair = Enum.min_by(p2_pairs, fn value -> @value_map[value] end)
+
+    cond do
+      @value_map[p1_high_pair] > @value_map[p2_high_pair] -> :p1
+      @value_map[p1_high_pair] < @value_map[p2_high_pair] -> :p2
+      @value_map[p1_low_pair] > @value_map[p2_low_pair] -> :p1
+      @value_map[p1_low_pair] < @value_map[p2_low_pair] -> :p2
+      @value_map[p1_kicker] > @value_map[p2_kicker] -> :p1
+      @value_map[p1_kicker] < @value_map[p2_kicker] -> :p2
+      true -> :tie
+    end
+  end
+
+  # Kicker at end of list
+  def find_two_pairs([value_1, value_2, value_3, value_4, kicker])
+    when value_1 == value_2 and value_3 == value_4 do
+      {[value_1, value_3], kicker}
+  end
+
+  # Kicker at beginning of list
+  def find_two_pairs([kicker, value_2, value_3, value_4, value_5])
+    when value_2 == value_3 and value_4 == value_5 do
+      {[value_2, value_4], kicker}
+  end
+
+  # Kicker in the middle of the list
+  def find_two_pairs([value_1, value_2, kicker, value_4, value_5])
+    when value_1 == value_2 and value_4 == value_5 do
+      {[value_1, value_4], kicker}
+  end
+
 
   def high_card_assessment(p1_values, p2_values) do
     p1_converted_values = Enum.map(p1_values, fn x -> @value_map[x] end) |> Enum.sort |> Enum.reverse
