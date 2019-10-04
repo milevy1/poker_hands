@@ -1,4 +1,18 @@
 defmodule PokerHands do
+  @value_map %{"2" => 2,
+               "3" => 3,
+               "4" => 4,
+               "5" => 5,
+               "6" => 6,
+               "7" => 7,
+               "8" => 8,
+               "9" => 9,
+               "T" => 10,
+               "J" => 11,
+               "Q" => 12,
+               "K" => 13,
+               "A" => 14}
+
   def winner?(cards_string) do
     p1_cards = cards(cards_string, :p1)
     p2_cards = cards(cards_string, :p2)
@@ -9,6 +23,7 @@ defmodule PokerHands do
     cond do
       p1_ranking < p2_ranking -> :p1
       p1_ranking > p2_ranking -> :p2
+      p1_ranking == 3 -> four_of_a_kind_tie_breaker(p1_values, p2_values)
       p1_ranking == 6 || p1_ranking == 2 -> straight_high_card_winner?(p1_values, p2_values)
     end
   end
@@ -50,7 +65,7 @@ defmodule PokerHands do
     cond do
       royal_flush?(values, suites) -> {1, values}
       straight_flush?(values, suites) -> {2, values}
-      # four_of_a_kind?(values) -> {3, values}
+      four_of_a_kind?(values) -> {3, values}
       # full_house?(values) -> {4, values}
       flush?(suites) -> {5, values}
       straight?(values) -> {6, values}
@@ -100,6 +115,56 @@ defmodule PokerHands do
     case {straight?(values), flush?(suites)} do
       {true, true} -> true
       _ -> false
+    end
+  end
+
+  def four_of_a_kind?([value_1, value_2, value_3, value_4, _value_5])
+    when value_1 == value_2 and value_1 == value_3 and value_1 == value_4 do
+    true
+  end
+  def four_of_a_kind?([_value_1, value_2, value_3, value_4, value_5])
+    when value_2 == value_3 and value_2 == value_4 and value_2 == value_5 do
+    true
+  end
+  def four_of_a_kind?(_values), do: false
+
+  # Because values are sorted by .values/1, set of fours
+  # will be in beginning or end of list
+  def four_of_a_kind_tie_breaker([p1_value_1, p1_value_2, _p1_value_3, _p1_value_4, p1_high_card],
+    [p2_value_1, p2_value_2, _p2_value_3, _p2_value_4, p2_high_card])
+      when p1_value_1 == p1_value_2 and p2_value_1 == p2_value_2 do
+
+      four_of_a_kind_tie_breaker_asessment(p1_value_1, p1_high_card, p2_value_1, p2_high_card)
+  end
+
+  def four_of_a_kind_tie_breaker([p1_high_card, _p1_value_2, _p1_value_3, p1_value_4, p1_value_5],
+    [p2_value_1, p2_value_2, _p2_value_3, _p2_value_4, p2_high_card])
+      when p1_value_4 == p1_value_5 and p2_value_1 == p2_value_2 do
+
+      four_of_a_kind_tie_breaker_asessment(p1_value_5, p1_high_card, p2_value_1, p2_high_card)
+  end
+
+  def four_of_a_kind_tie_breaker([p1_value_1, p1_value_2, _p1_value_3, _p1_value_4, p1_high_card],
+    [p2_high_card, _p2_value_2, _p2_value_3, p2_value_4, p2_value_5])
+      when p1_value_1 == p1_value_2 and p2_value_4 == p2_value_5 do
+
+      four_of_a_kind_tie_breaker_asessment(p1_value_1, p1_high_card, p2_value_5, p2_high_card)
+  end
+
+  def four_of_a_kind_tie_breaker([p1_high_card, _p1_value_2, _p1_value_3, p1_value_4, p1_value_5],
+    [p2_high_card, _p2_value_2, _p2_value_3, p2_value_4, p2_value_5])
+      when p1_value_4 == p1_value_5 and p2_value_4 == p2_value_5 do
+
+      four_of_a_kind_tie_breaker_asessment(p1_value_5, p1_high_card, p2_value_5, p2_high_card)
+  end
+
+  def four_of_a_kind_tie_breaker_asessment(p1_four_value, p1_high_card, p2_four_value, p2_high_card) do
+    cond do
+      @value_map[p1_four_value] > @value_map[p2_four_value] -> :p1
+      @value_map[p1_four_value] < @value_map[p2_four_value] -> :p2
+      @value_map[p1_high_card] > @value_map[p2_high_card] -> :p1
+      @value_map[p1_high_card] < @value_map[p2_high_card] -> :p2
+      true -> :tie
     end
   end
 end
