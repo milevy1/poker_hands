@@ -248,7 +248,7 @@ defmodule PokerHands do
   end
 
   # Because .values/1 sorts the values,
-  # the set of three must be in the beginning or end of list
+  # the set of three can be at beginning, middle, or end of list
   def three_of_a_kind?([value_1, value_2, value_3, _value_4, _value_5])
     when value_1 == value_2 and value_1 == value_3 do
       true
@@ -259,44 +259,33 @@ defmodule PokerHands do
       true
   end
 
+  def three_of_a_kind?([_value_1, value_2, value_3, value_4, _value_5])
+    when value_2 == value_3 and value_2 == value_4 do
+      true
+  end
+
   def three_of_a_kind?(_values), do: false
 
-  # Both player sets of three in beginning of lists
-  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
-    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
-    when p1_value_1 == p1_value_2 and p1_value_1 == p1_value_3 and
-         p2_value_1 == p2_value_2 and p2_value_1 == p2_value_3 do
+  def three_of_a_kind_tie_breaker(p1_values, p2_values) do
+    {p1_three_value, p1_kickers} = find_three_of_a_kind(p1_values)
+    {p2_three_value, p2_kickers} = find_three_of_a_kind(p2_values)
 
-    three_of_a_kind_tie_breaker_assessment(p1_value_1, [p1_value_4, p1_value_5], p2_value_1, [p2_value_4, p2_value_5])
+    three_of_a_kind_tie_breaker_assessment(p1_three_value, p1_kickers, p2_three_value, p2_kickers)
   end
 
-  # Both player sets of three at end of lists
-  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
-    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
-    when p1_value_3 == p1_value_4 and p1_value_3 == p1_value_5 and
-         p2_value_3 == p2_value_4 and p2_value_3 == p2_value_5 do
-
-    three_of_a_kind_tie_breaker_assessment(p1_value_5, [p1_value_1, p1_value_2], p2_value_5, [p2_value_1, p2_value_2])
+  def find_three_of_a_kind([value_1, value_2, value_3 | kickers])
+    when value_1 == value_2 and value_1 == value_3 do
+      {value_1, kickers}
   end
 
-  # Player 1 set of three in beginning of list
-  # Player 2 set of three at end of list
-  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
-    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
-    when p1_value_1 == p1_value_2 and p1_value_1 == p1_value_3 and
-         p2_value_3 == p2_value_4 and p2_value_3 == p2_value_5 do
-
-    three_of_a_kind_tie_breaker_assessment(p1_value_1, [p1_value_4, p1_value_5], p2_value_5, [p2_value_1, p2_value_2])
+  def find_three_of_a_kind([kicker_1, value_1, value_2, value_3, kicker_2])
+    when value_1 == value_2 and value_1 == value_3 do
+      {value_1, [kicker_1, kicker_2]}
   end
 
-  # Player 1 set of three at end of list
-  # Player 2 set of three in beginning of list
-  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
-    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
-    when p1_value_3 == p1_value_4 and p1_value_3 == p1_value_5 and
-         p2_value_1 == p2_value_2 and p2_value_1 == p2_value_3 do
-
-    three_of_a_kind_tie_breaker_assessment(p1_value_5, [p1_value_1, p1_value_2], p2_value_1, [p2_value_4, p2_value_5])
+  def find_three_of_a_kind([kicker_1, kicker_2, value_1, value_2, value_3])
+    when value_1 == value_2 and value_1 == value_3 do
+      {value_1, [kicker_1, kicker_2]}
   end
 
   def three_of_a_kind_tie_breaker_assessment(p1_set_of_three_value, p1_other_values,
