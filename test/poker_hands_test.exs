@@ -2,9 +2,16 @@ defmodule PokerHandsTest do
   use ExUnit.Case
 
   # @tag :skip
-  test "Royal flush beats all other hands" do
-    assert PokerHands.winner?("TC JC QC KC AC 7D 2S 5D 3S AC") == :p1
-    assert PokerHands.winner?("7D 2S 5D 3S AC TC JC QC KC AC") == :p2
+  describe ".winner?/1" do
+    test "Royal flush beats all other hands" do
+      assert PokerHands.winner?("TC JC QC KC AC 7D 2S 5D 3S AC") == :p1
+      assert PokerHands.winner?("7D 2S 5D 3S AC TC JC QC KC AC") == :p2
+    end
+
+    test "Straight high card beats a lower straight" do
+      assert PokerHands.winner?("TH JC QC KC AC 9D TS JD QS KC") == :p1
+      assert PokerHands.winner?("9D TS JD QS KC TH JC QC KC AC") == :p2
+    end
   end
 
   describe ".cards/2" do
