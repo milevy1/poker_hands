@@ -3,14 +3,36 @@ defmodule PokerHands do
     p1_cards = cards(cards_string, :p1)
     p2_cards = cards(cards_string, :p2)
 
-    p1_ranking = ranking(p1_cards)
-    p2_ranking = ranking(p2_cards)
+    {p1_ranking, p1_values} = ranking(p1_cards)
+    {p2_ranking, p2_values} = ranking(p2_cards)
 
     cond do
       p1_ranking < p2_ranking -> :p1
       p1_ranking > p2_ranking -> :p2
+      p1_ranking == 6 -> straight_high_card_winner?(p1_values, p2_values)
     end
   end
+
+  def straight_high_card_winner?(["A", "J", "K", "Q", "T"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["A", "J", "K", "Q", "T"]), do: :p2
+  def straight_high_card_winner?(["9", "J", "K", "Q", "T"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["9", "J", "K", "Q", "T"]), do: :p2
+  def straight_high_card_winner?(["8", "9", "J", "Q", "T"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["8", "9", "J", "Q", "T"]), do: :p2
+  def straight_high_card_winner?(["7", "8", "9", "J", "T"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["7", "8", "9", "J", "T"]), do: :p2
+  def straight_high_card_winner?(["6", "7", "8", "9", "T"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["6", "7", "8", "9", "T"]), do: :p2
+  def straight_high_card_winner?(["5", "6", "7", "8", "9"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["5", "6", "7", "8", "9"]), do: :p2
+  def straight_high_card_winner?(["4", "5", "6", "7", "8"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["4", "5", "6", "7", "8"]), do: :p2
+  def straight_high_card_winner?(["3", "4", "5", "6", "7"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["3", "4", "5", "6", "7"]), do: :p2
+  def straight_high_card_winner?(["2", "3", "4", "5", "6"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["2", "3", "4", "5", "6"]), do: :p2
+  def straight_high_card_winner?(["2", "3", "4", "5", "A"], _p2_values), do: :p1
+  def straight_high_card_winner?(_p1_values, ["2", "3", "4", "5", "A"]), do: :p2
 
   def cards(cards_string, :p1) do
     String.split(cards_string, " ") |> Enum.take(5)
@@ -30,7 +52,7 @@ defmodule PokerHands do
       # four_of_a_kind?(values) -> 3
       # full_house?(values) -> 4
       flush?(suites) -> 5
-      straight?(values) -> 6
+      straight?(values) -> {6, values}
       # three_of_a_kind?(values) -> 7
       # two_pairs -> 8
       # one_pair -> 9

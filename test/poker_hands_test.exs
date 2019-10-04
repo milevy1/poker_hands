@@ -14,6 +14,29 @@ defmodule PokerHandsTest do
     end
   end
 
+  describe ".straight_high_card_winner?/2" do
+    test "It returns the player with the highest card value" do
+      p1_values = ["2", "3", "4", "5", "6"]
+      p2_values = ["3", "4", "5", "6", "7"]
+
+      assert PokerHands.straight_high_card_winner?(p1_values, p2_values) == :p2
+    end
+
+    test "It treats Aces as a low card in a A-5 Straight" do
+      p1_values = ["2", "3", "4", "5", "A"]
+      p2_values = ["3", "4", "5", "6", "7"]
+
+      assert PokerHands.straight_high_card_winner?(p1_values, p2_values) == :p2
+    end
+
+    test "It treats Aces as a high card in a T-A Straight" do
+      p1_values = ["A", "J", "K", "Q", "T"]
+      p2_values = ["2", "3", "4", "5", "A"]
+
+      assert PokerHands.straight_high_card_winner?(p1_values, p2_values) == :p1
+    end
+  end
+
   describe ".cards/2" do
     test "It splits a string of space separated cards into a list" do
       cards = "TC JC QC KC AC 7D 2S 5D 3S AC"
