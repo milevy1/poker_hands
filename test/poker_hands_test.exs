@@ -17,6 +17,25 @@ defmodule PokerHandsTest do
       assert PokerHands.winner?("3H 4H 5H 6H 7H 9D TD JD QD KD") == :p2
       assert PokerHands.winner?("9D TD JD QD KD AH 2H 3H 4H 5H ") == :p1
     end
+
+    test "Four of a kind ranks 3 and beats all but royal and straight flushes" do
+      assert PokerHands.winner?("3H 3D 5H 3S 3C 2D TD JD QD KD") == :p1
+      assert PokerHands.winner?("3H 3D 5H 3S 3C 9D TD JD QD KD") == :p2
+      assert PokerHands.winner?("3H 3D 5H 3S 3C TD JD QD KD AD") == :p2
+    end
+
+    test "Four of a kind ties go to player with higher set of four" do
+      assert PokerHands.winner?("3H 3D 2H 3S 3C JD JS JC JH TD") == :p2
+      assert PokerHands.winner?("JD JS JC JH TD 3H 3D 5H 3S 3C") == :p1
+    end
+
+    test "Four of a kind ties go to player with high card if same set of four" do
+      assert PokerHands.winner?("JD JS JC JH QD JD JS JC JH KD") == :p2
+    end
+
+    test "Four of a kind ties if identical hand values" do
+      assert PokerHands.winner?("JD JS JC JH QD JD JS JC JH QD") == :tie
+    end
   end
 
   describe ".straight_high_card_winner?/2" do
