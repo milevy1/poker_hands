@@ -48,7 +48,7 @@ defmodule PokerHands do
       full_house?(values) -> {4, values}
       flush?(suites) -> {5, values}
       straight?(values) -> {6, values}
-      # three_of_a_kind?(values) -> {7, values}
+      three_of_a_kind?(values) -> {7, values}
       # two_pairs -> {8, values}
       # one_pair -> {9, values}
       true -> {10, values} # high card
@@ -230,4 +230,18 @@ defmodule PokerHands do
       true -> :tie
     end
   end
+
+  # Because .values/1 sorts the values,
+  # the set of three must be in the beginning or end of list
+  def three_of_a_kind?([value_1, value_2, value_3, _value_4, _value_5])
+    when value_1 == value_2 and value_1 == value_3 do
+      true
+  end
+
+  def three_of_a_kind?([_value_1, _value_2, value_3, value_4, value_5])
+    when value_3 == value_4 and value_3 == value_5 do
+      true
+  end
+
+  def three_of_a_kind?(_values), do: false
 end
