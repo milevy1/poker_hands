@@ -69,6 +69,26 @@ defmodule PokerHandsTest do
     test "Three of a kind ties if identical set of three and high card values" do
       assert PokerHands.winner?("AH AD AS KH QD AH AD AS KH QD") == :tie
     end
+
+    test "Two Pairs ranks 8 for hands with two sets of pairs" do
+      assert PokerHands.winner?("AH AD KS KH 5D AH JD 4S 2H 2D") == :p1
+    end
+
+    test "Two Pair ties go to the player with most valuable pair" do
+      assert PokerHands.winner?("AH AD KS KH 5D 2H 2D 4S 4H TD") == :p1
+    end
+
+    test "Two Pair ties with same high pair go to player with most valuable 2nd pair" do
+      assert PokerHands.winner?("AH AD KS KH 5D AH AD 4S 4H TD") == :p1
+    end
+
+    test "Two Pair ties with same two pairs got to player with more valuable kicker" do
+      assert PokerHands.winner?("AH AD KS KH 5D AH AD KS KH QD") == :p2
+    end
+
+    test "Two Pair ties if identical hand values" do
+      assert PokerHands.winner?("AH AS KS KH 5D AH AD KS KH 5H") == :tie
+    end
   end
 
   describe ".straight_tie_breaker/2" do
