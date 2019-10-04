@@ -107,6 +107,22 @@ defmodule PokerHandsTest do
     test "One pair ties if players have same hand" do
       assert PokerHands.winner?("AH AD KS QH 2D AH AD KS QH 2D") == :tie
     end
+
+    test "If no other hand is determined, player with High Card wins" do
+      assert PokerHands.winner?("AH JD 6S 4H 2D KH JD 7S 4H 2D") == :p1
+    end
+
+    test "High Card tie breakers go to player with next highest card" do
+      assert PokerHands.winner?("AH JD 6S 4H 2D AH KD 7S 4H 2D") == :p2
+      assert PokerHands.winner?("AH KD 6S 4H 2D AH KD 7S 4H 2D") == :p2
+      assert PokerHands.winner?("AH KD QS 4H 2D AH KD 7S 4H 2D") == :p1
+      assert PokerHands.winner?("AH KD QS JH 2D AH KD 7S 4H 2D") == :p1
+      assert PokerHands.winner?("AH KD QS JH 2D AH KD QS JH 7D") == :p2
+    end
+
+    test "High Card if identical 5 cards, results in tie" do
+      assert PokerHands.winner?("AH KD QS JH 2D AH KD QS JH 2D") == :tie
+    end
   end
 
   describe ".straight_tie_breaker/2" do
