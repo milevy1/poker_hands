@@ -26,6 +26,7 @@ defmodule PokerHands do
       p1_ranking == 3 -> four_of_a_kind_tie_breaker(p1_values, p2_values)
       p1_ranking == 2 || p1_ranking == 6 -> straight_tie_breaker(p1_values, p2_values)
       p1_ranking == 4 -> full_house_tie_breaker(p1_values, p2_values)
+      p1_ranking == 7 -> three_of_a_kind_tie_breaker(p1_values, p2_values)
     end
   end
 
@@ -244,4 +245,71 @@ defmodule PokerHands do
   end
 
   def three_of_a_kind?(_values), do: false
+
+  # Both player sets of three in beginning of lists
+  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
+    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
+    when p1_value_1 == p1_value_2 and p1_value_1 == p1_value_3 and
+         p2_value_1 == p2_value_2 and p2_value_1 == p2_value_3 do
+
+    three_of_a_kind_tie_breaker_assessment(p1_value_1, [p1_value_4, p1_value_5], p2_value_1, [p2_value_4, p2_value_5])
+  end
+
+  # Both player sets of three at end of lists
+  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
+    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
+    when p1_value_3 == p1_value_4 and p1_value_3 == p1_value_5 and
+         p2_value_3 == p2_value_4 and p2_value_3 == p2_value_5 do
+
+    three_of_a_kind_tie_breaker_assessment(p1_value_5, [p1_value_1, p1_value_2], p2_value_5, [p2_value_1, p2_value_2])
+  end
+
+  # Player 1 set of three in beginning of list
+  # Player 2 set of three at end of list
+  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
+    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
+    when p1_value_1 == p1_value_2 and p1_value_1 == p1_value_3 and
+         p2_value_3 == p2_value_4 and p2_value_3 == p2_value_5 do
+
+    three_of_a_kind_tie_breaker_assessment(p1_value_1, [p1_value_4, p1_value_5], p2_value_5, [p2_value_1, p2_value_2])
+  end
+
+  # Player 1 set of three at end of list
+  # Player 2 set of three in beginning of list
+  def three_of_a_kind_tie_breaker([p1_value_1, p1_value_2, p1_value_3, p1_value_4, p1_value_5],
+    [p2_value_1, p2_value_2, p2_value_3, p2_value_4, p2_value_5])
+    when p1_value_3 == p1_value_4 and p1_value_3 == p1_value_5 and
+         p2_value_1 == p2_value_2 and p2_value_1 == p2_value_3 do
+
+    three_of_a_kind_tie_breaker_assessment(p1_value_5, [p1_value_1, p1_value_2], p2_value_1, [p2_value_4, p2_value_5])
+  end
+
+  def three_of_a_kind_tie_breaker_assessment(p1_set_of_three_value, p1_other_values,
+    p2_set_of_three_value, p2_other_values) do
+
+      cond do
+        @value_map[p1_set_of_three_value] > @value_map[p2_set_of_three_value] -> :p1
+        @value_map[p1_set_of_three_value] < @value_map[p2_set_of_three_value] -> :p2
+        true -> high_card_assessment(p1_other_values, p2_other_values)
+      end
+  end
+
+  def high_card_assessment(p1_values, p2_values) do
+    p1_converted_values = Enum.map(p1_values, fn x -> @value_map[x] end) |> Enum.sort |> Enum.reverse
+    p2_converted_values = Enum.map(p2_values, fn x -> @value_map[x] end) |> Enum.sort |> Enum.reverse
+
+    cond do
+      Enum.at(p1_converted_values, 0) > Enum.at(p2_converted_values, 0) -> :p1
+      Enum.at(p1_converted_values, 0) < Enum.at(p2_converted_values, 0) -> :p2
+      Enum.at(p1_converted_values, 1) > Enum.at(p2_converted_values, 1) -> :p1
+      Enum.at(p1_converted_values, 1) < Enum.at(p2_converted_values, 1) -> :p2
+      Enum.at(p1_converted_values, 2) > Enum.at(p2_converted_values, 2) -> :p1
+      Enum.at(p1_converted_values, 2) < Enum.at(p2_converted_values, 2) -> :p2
+      Enum.at(p1_converted_values, 3) > Enum.at(p2_converted_values, 3) -> :p1
+      Enum.at(p1_converted_values, 3) < Enum.at(p2_converted_values, 3) -> :p2
+      Enum.at(p1_converted_values, 4) > Enum.at(p2_converted_values, 4) -> :p1
+      Enum.at(p1_converted_values, 4) < Enum.at(p2_converted_values, 4) -> :p2
+      true -> :tie
+    end
+  end
 end
