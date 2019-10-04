@@ -93,6 +93,20 @@ defmodule PokerHandsTest do
     test "One Pair ranks 9 for hands with just one pair of card values" do
       assert PokerHands.winner?("AH AD KS 5H 2D AH JD 4S 2H 5D") == :p1
     end
+
+    test "One Pair ties go to player with more valuable pair" do
+      assert PokerHands.winner?("AH AD KS 5H 2D JH JD 4S 2H 5D") == :p1
+    end
+
+    test "One Pair ties with same valued pair go to player with high card kicker" do
+      assert PokerHands.winner?("AH AD KS 5H 2D AH AD 4S 2H 5D") == :p1
+      assert PokerHands.winner?("AH AD KS QH 2D AH AD KS 2H 5D") == :p1
+      assert PokerHands.winner?("AH AD KS QH 2D AH AD KS QH 5D") == :p2
+    end
+
+    test "One pair ties if players have same hand" do
+      assert PokerHands.winner?("AH AD KS QH 2D AH AD KS QH 2D") == :tie
+    end
   end
 
   describe ".straight_tie_breaker/2" do

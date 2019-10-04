@@ -28,6 +28,7 @@ defmodule PokerHands do
       p1_ranking == 4 -> full_house_tie_breaker(p1_values, p2_values)
       p1_ranking == 7 -> three_of_a_kind_tie_breaker(p1_values, p2_values)
       p1_ranking == 8 -> two_pairs_tie_breaker(p1_values, p2_values)
+      p1_ranking == 9 -> one_pair_tie_breaker(p1_values, p2_values)
     end
   end
 
@@ -371,6 +372,40 @@ defmodule PokerHands do
   end
 
   def one_pair?(_values), do: false
+
+  def one_pair_tie_breaker(p1_values, p2_values) do
+    {p1_pair_value, p1_kickers} = find_one_pair(p1_values)
+    {p2_pair_value, p2_kickers} = find_one_pair(p2_values)
+
+    cond do
+      @value_map[p1_pair_value] > @value_map[p2_pair_value] -> :p1
+      @value_map[p1_pair_value] < @value_map[p2_pair_value] -> :p2
+      true -> high_card_assessment(p1_kickers, p2_kickers)
+    end
+  end
+
+  def find_one_pair([paired_value_1, paired_value_2 | kickers])
+    when paired_value_1 == paired_value_2 do
+      {paired_value_1, kickers}
+  end
+
+  def find_one_pair([kicker_1, paired_value_1, paired_value_2, kicker_2, kicker_3])
+    when paired_value_1 == paired_value_2 do
+      kickers = [kicker_1, kicker_2, kicker_3]
+      {paired_value_1, kickers}
+  end
+
+  def find_one_pair([kicker_1, kicker_2, paired_value_1, paired_value_2, kicker_3])
+    when paired_value_1 == paired_value_2 do
+      kickers = [kicker_1, kicker_2, kicker_3]
+      {paired_value_1, kickers}
+  end
+
+  def find_one_pair([kicker_1, kicker_2, kicker_3, paired_value_1, paired_value_2])
+    when paired_value_1 == paired_value_2 do
+      kickers = [kicker_1, kicker_2, kicker_3]
+      {paired_value_1, kickers}
+  end
 
   def high_card_assessment(p1_values, p2_values) do
     p1_converted_values = Enum.map(p1_values, fn x -> @value_map[x] end) |> Enum.sort |> Enum.reverse
