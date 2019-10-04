@@ -2,9 +2,46 @@ defmodule PokerHandsTest do
   use ExUnit.Case
 
   # @tag :skip
-  test "Royal flush beats all other hands" do
-    assert PokerHands.winner?("TC JC QC KC AC 7D 2S 5D 3S AC") == :p1
-    assert PokerHands.winner?("7D 2S 5D 3S AC TC JC QC KC AC") == :p2
+  describe ".winner?/1" do
+    test "Royal flush beats all other hands" do
+      assert PokerHands.winner?("TC JC QC KC AC 7D 2S 5D 3S AC") == :p1
+      assert PokerHands.winner?("7D 2S 5D 3S AC TC JC QC KC AC") == :p2
+    end
+
+    test "Straight high card beats a lower straight" do
+      assert PokerHands.winner?("TH JC QC KC AC 9D TS JD QS KC") == :p1
+      assert PokerHands.winner?("9D TS JD QS KC TH JC QC KC AC") == :p2
+    end
+  end
+
+  describe ".straight_high_card_winner?/2" do
+    test "It returns the player with the highest card value" do
+      p1_values = ["2", "3", "4", "5", "6"]
+      p2_values = ["3", "4", "5", "6", "7"]
+
+      assert PokerHands.straight_high_card_winner?(p1_values, p2_values) == :p2
+    end
+
+    test "It treats Aces as a low card in a A-5 Straight" do
+      p1_values = ["2", "3", "4", "5", "A"]
+      p2_values = ["3", "4", "5", "6", "7"]
+
+      assert PokerHands.straight_high_card_winner?(p1_values, p2_values) == :p2
+    end
+
+    test "It treats Aces as a high card in a T-A Straight" do
+      p1_values = ["A", "J", "K", "Q", "T"]
+      p2_values = ["2", "3", "4", "5", "A"]
+
+      assert PokerHands.straight_high_card_winner?(p1_values, p2_values) == :p1
+    end
+
+    test "It can handle ties if same high card straight" do
+      p1_values = ["A", "J", "K", "Q", "T"]
+      p2_values = ["A", "J", "K", "Q", "T"]
+
+      assert PokerHands.straight_high_card_winner?(p1_values, p2_values) == :tie
+    end
   end
 
   describe ".cards/2" do
@@ -13,35 +50,6 @@ defmodule PokerHandsTest do
 
       assert PokerHands.cards(cards, :p1) == ["TC", "JC", "QC", "KC", "AC"]
       assert PokerHands.cards(cards, :p2) == ["7D", "2S", "5D", "3S", "AC"]
-    end
-  end
-
-  describe ".ranking/1" do
-    test "It ranks a Royal Flush as a 1" do
-      assert PokerHands.ranking(["TC", "JC", "QC", "KC", "AC"]) == 1
-      assert PokerHands.ranking(["TH", "JH", "QH", "KH", "AH"]) == 1
-      assert PokerHands.ranking(["TS", "JS", "QS", "KS", "AS"]) == 1
-      assert PokerHands.ranking(["TD", "JD", "QD", "KD", "AD"]) == 1
-      assert PokerHands.ranking(["TD", "JC", "QC", "KC", "AC"]) != 1
-    end
-
-    test "It ranks a Straight Flush as a 2" do
-      assert PokerHands.ranking(["2C", "3C", "4C", "5C", "6C"]) == 2
-      assert PokerHands.ranking(["2C", "3C", "4C", "5C", "AC"]) == 2
-      assert PokerHands.ranking(["9C", "TC", "JC", "QC", "KC"]) == 2
-    end
-
-    test "It ranks a Normal Flush as a 5" do
-      assert PokerHands.ranking(["2D", "4D", "QD", "KD", "AD"]) == 5
-      assert PokerHands.ranking(["2H", "4H", "QH", "KH", "AH"]) == 5
-      assert PokerHands.ranking(["2S", "4S", "QS", "KS", "AS"]) == 5
-      assert PokerHands.ranking(["2C", "4C", "QC", "KC", "AC"]) == 5
-      assert PokerHands.ranking(["2C", "4D", "QD", "KD", "AD"]) != 5
-    end
-
-    test "It ranks a Normal Straight as a 6" do
-      assert PokerHands.ranking(["2D", "3D", "4C", "5D", "AD"]) == 6
-      assert PokerHands.ranking(["2D", "3D", "4C", "5D", "6D"]) == 6
     end
   end
 
