@@ -20,3 +20,9 @@ Input
 ## Poker Hand Rankings Tiebreakers
 
 https://www.adda52.com/poker/poker-rules/cash-game-rules/tie-breaker-rules
+
+
+## How to run against text file
+
+- In the command line, enter `iex -S mix`
+- Then enter `PokerHands.count_player_1_wins("poker.txt")`
