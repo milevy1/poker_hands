@@ -24,32 +24,10 @@ defmodule PokerHands do
       p1_ranking < p2_ranking -> :p1
       p1_ranking > p2_ranking -> :p2
       p1_ranking == 3 -> four_of_a_kind_tie_breaker(p1_values, p2_values)
-      p1_ranking == 2 || p1_ranking == 6 -> straight_high_card_winner?(p1_values, p2_values)
+      p1_ranking == 2 || p1_ranking == 6 -> straight_tie_breaker(p1_values, p2_values)
       p1_ranking == 4 -> full_house_tie_breaker(p1_values, p2_values)
     end
   end
-
-  def straight_high_card_winner?(p1_values, p2_values) when p1_values == p2_values, do: :tie
-  def straight_high_card_winner?(["A", "J", "K", "Q", "T"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["A", "J", "K", "Q", "T"]), do: :p2
-  def straight_high_card_winner?(["9", "J", "K", "Q", "T"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["9", "J", "K", "Q", "T"]), do: :p2
-  def straight_high_card_winner?(["8", "9", "J", "Q", "T"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["8", "9", "J", "Q", "T"]), do: :p2
-  def straight_high_card_winner?(["7", "8", "9", "J", "T"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["7", "8", "9", "J", "T"]), do: :p2
-  def straight_high_card_winner?(["6", "7", "8", "9", "T"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["6", "7", "8", "9", "T"]), do: :p2
-  def straight_high_card_winner?(["5", "6", "7", "8", "9"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["5", "6", "7", "8", "9"]), do: :p2
-  def straight_high_card_winner?(["4", "5", "6", "7", "8"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["4", "5", "6", "7", "8"]), do: :p2
-  def straight_high_card_winner?(["3", "4", "5", "6", "7"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["3", "4", "5", "6", "7"]), do: :p2
-  def straight_high_card_winner?(["2", "3", "4", "5", "6"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["2", "3", "4", "5", "6"]), do: :p2
-  def straight_high_card_winner?(["2", "3", "4", "5", "A"], _p2_values), do: :p1
-  def straight_high_card_winner?(_p1_values, ["2", "3", "4", "5", "A"]), do: :p2
 
   def cards(cards_string, :p1) do
     String.split(cards_string, " ") |> Enum.take(5)
@@ -118,6 +96,28 @@ defmodule PokerHands do
       _ -> false
     end
   end
+
+  def straight_tie_breaker(p1_values, p2_values) when p1_values == p2_values, do: :tie
+  def straight_tie_breaker(["A", "J", "K", "Q", "T"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["A", "J", "K", "Q", "T"]), do: :p2
+  def straight_tie_breaker(["9", "J", "K", "Q", "T"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["9", "J", "K", "Q", "T"]), do: :p2
+  def straight_tie_breaker(["8", "9", "J", "Q", "T"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["8", "9", "J", "Q", "T"]), do: :p2
+  def straight_tie_breaker(["7", "8", "9", "J", "T"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["7", "8", "9", "J", "T"]), do: :p2
+  def straight_tie_breaker(["6", "7", "8", "9", "T"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["6", "7", "8", "9", "T"]), do: :p2
+  def straight_tie_breaker(["5", "6", "7", "8", "9"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["5", "6", "7", "8", "9"]), do: :p2
+  def straight_tie_breaker(["4", "5", "6", "7", "8"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["4", "5", "6", "7", "8"]), do: :p2
+  def straight_tie_breaker(["3", "4", "5", "6", "7"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["3", "4", "5", "6", "7"]), do: :p2
+  def straight_tie_breaker(["2", "3", "4", "5", "6"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["2", "3", "4", "5", "6"]), do: :p2
+  def straight_tie_breaker(["2", "3", "4", "5", "A"], _p2_values), do: :p1
+  def straight_tie_breaker(_p1_values, ["2", "3", "4", "5", "A"]), do: :p2
 
   def four_of_a_kind?([value_1, value_2, value_3, value_4, _value_5])
     when value_1 == value_2 and value_1 == value_3 and value_1 == value_4 do
