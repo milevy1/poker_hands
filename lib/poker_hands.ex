@@ -167,15 +167,15 @@ defmodule PokerHands do
   # Because .values/1 sorts the values,
   # the set of three can be at beginning, middle, or end of list
   def three_of_a_kind?([same_value, same_value, same_value, _, _]) do
-      true
+    true
   end
 
   def three_of_a_kind?([_, _, same_value, same_value, same_value]) do
-      true
+    true
   end
 
   def three_of_a_kind?([_, same_value, same_value, same_value, _]) do
-      true
+    true
   end
 
   def three_of_a_kind?(_values), do: false
@@ -193,11 +193,11 @@ defmodule PokerHands do
   def three_of_a_kind_tie_breaker_assessment(p1_set_of_three_value, p1_other_values,
     p2_set_of_three_value, p2_other_values) do
 
-      cond do
-        p1_set_of_three_value > p2_set_of_three_value -> :p1
-        p1_set_of_three_value < p2_set_of_three_value -> :p2
-        true -> high_card_assessment(p1_other_values, p2_other_values)
-      end
+    cond do
+      p1_set_of_three_value > p2_set_of_three_value -> :p1
+      p1_set_of_three_value < p2_set_of_three_value -> :p2
+      true -> high_card_assessment(p1_other_values, p2_other_values)
+    end
   end
 
   def two_pairs?([pair_1, pair_1, pair_2, pair_2, _value_5]) do
@@ -241,24 +241,20 @@ defmodule PokerHands do
     {[pair_1, pair_2], kicker}
   end
 
-  def one_pair?([value_1, value_2, _value_3, _value_4, _value_5])
-    when value_1 == value_2 do
-      true
+  def one_pair?([paired_value, paired_value, _value_3, _value_4, _value_5]) do
+    true
   end
 
-  def one_pair?([_value_1, value_2, value_3, _value_4, _value_5])
-    when value_2 == value_3 do
-      true
+  def one_pair?([_value_1, paired_value, paired_value, _value_4, _value_5]) do
+    true
   end
 
-  def one_pair?([_value_1, _value_2, value_3, value_4, _value_5])
-    when value_3 == value_4 do
-      true
+  def one_pair?([_value_1, _value_2, paired_value, paired_value, _value_5]) do
+    true
   end
 
-  def one_pair?([_value_1, _value_2, _value_3, value_4, value_5])
-    when value_4 == value_5 do
-      true
+  def one_pair?([_value_1, _value_2, _value_3, paired_value, paired_value]) do
+    true
   end
 
   def one_pair?(_values), do: false
